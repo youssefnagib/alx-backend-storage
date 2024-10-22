@@ -10,4 +10,4 @@ def list_all(mongo_collection):
     :param mongo_collection: MongoCollection object
     :return: list of documents
     '''
-    return list(school for school in mongo_collection.find())
+    return list(mongo_collection.find())
