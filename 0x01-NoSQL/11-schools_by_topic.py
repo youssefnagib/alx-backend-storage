@@ -19,3 +19,4 @@ def schools_by_topic(mongo_collection, topic):
         },
     }
     return [schools for schools in mongo_collection.find(topicFilter)]
+
