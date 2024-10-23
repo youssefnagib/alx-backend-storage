@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-'''A module with tools for request caching and tracking.
+'''
+A simple in-memory cache using Redis.
 '''
 import redis
 import requests
@@ -10,7 +11,6 @@ from typing import Callable
 redis_store = redis.Redis()
 '''
 A Redis client for caching and tracking requests.
-
 '''
 
 
@@ -23,7 +23,7 @@ def data_cacher(method: Callable) -> Callable:
         Callable: The decorated function with caching.
     '''
     @wraps(method)
-    def invoker(url) -> str:
+    def invoker(url: str) -> str:
         '''
         Checks if the result of the request is cached
         and returns it if available.
@@ -36,13 +36,13 @@ def data_cacher(method: Callable) -> Callable:
             or the result of the request.
         '''
         redis_store.incr(f'count:{url}')
-        result = redis_store.get(f'result:{url}')
-        if result:
-            return result.decode('utf-8')
-        result = method(url)
-        redis_store.set(f'count:{url}', 0)
-        redis_store.setex(f'result:{url}', 10, result)
-        return result
+        Key = url
+        data = redis_store.get(Key)
+        if data:
+            return data.decode("utf-8")
+        cache = method(url)
+        redis_store.setex(Key, 10, cache)
+        return cache
     return invoker
 
 
