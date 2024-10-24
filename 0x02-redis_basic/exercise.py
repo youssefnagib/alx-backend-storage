@@ -18,7 +18,8 @@ def count_calls(method: Callable) -> Callable:
     '''
     @wraps(method)
     def invoker(self, *args, **kwargs) -> Any:
-        '''Invokes the given method after incrementing its call counter.
+        '''
+        Invokes the given method after incrementing its call counter.
         '''
         if isinstance(self._redis, redis.Redis):
             self._redis.incr(method.__qualname__)
@@ -86,8 +87,11 @@ def replay(fn: Callable) -> None:
 
 
 class Cache:
+    '''
+    A simple in-memory cache using Redis.'''
     def __init__(self) -> None:
-        '''Initializes a Cache instance.
+        '''
+        Initializes a Cache instance.
         '''
         self._redis = redis.Redis()
         self._redis.flushdb()
