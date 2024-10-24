@@ -40,7 +40,7 @@ def data_cacher(method: Callable) -> Callable:
         Key = url
         data = redis_store.get(Key)
         if data:
-            return data.decode("utf-8")
+            return data.decode('utf-8')
         cache = method(url)
         redis_store.set(Key, 0)
         redis_store.setex(Key, 10, cache)
