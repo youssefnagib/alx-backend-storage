@@ -35,7 +35,9 @@ def data_cacher(method: Callable) -> Callable:
             str: The content of the URL if available,
             or the result of the request.
         '''
-        redis_store.incr(f'count:{url}')
+        count_key = f'count:{url}'
+        redis_store.incr(count_key)
+        count = redis_store.get(count_key).decode("utf-8")
         Key = url
         data = redis_store.get(Key)
         if data:
