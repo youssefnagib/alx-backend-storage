@@ -35,15 +35,13 @@ def data_cacher(method: Callable) -> Callable:
             str: The content of the URL if available,
             or the result of the request.
         '''
-        count_key = f'count:{url}'
-        redis_store.incr(count_key)
         Key = url
         data = redis_store.get(Key)
         if data:
             return data.decode('utf-8')
         cache = method(url)
         redis_store.set(Key, 0)
-        redis_store.expire(Key, 9, cache)
+        redis_store.expire(Key, 10, cache)
         return cache
     return invoker
 
@@ -58,4 +56,6 @@ def get_page(url: str) -> str:
     Returns:
         str: The content of the URL.
     '''
+    count_key = f'count:{url}'
+    redis_store.incr(count_key)
     return requests.get(url).text
