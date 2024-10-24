@@ -43,7 +43,7 @@ def data_cacher(method: Callable) -> Callable:
             return data.decode('utf-8')
         cache = method(url)
         redis_store.set(Key, 0)
-        redis_store.expire(Key, 10, cache)
+        redis_store.expire(Key, 9, cache)
         return cache
     return invoker
 
