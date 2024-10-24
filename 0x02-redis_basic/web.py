@@ -40,8 +40,8 @@ def data_cacher(method: Callable) -> Callable:
         if data:
             return data.decode('utf-8')
         cache = method(url)
-        redis_store.set(Key, 0)
-        redis_store.expire(Key, 10, cache)
+        redis_store.set(Key, cache)
+        redis_store.expire(Key, 10)
         return cache
     return invoker
 
@@ -58,4 +58,5 @@ def get_page(url: str) -> str:
     '''
     count_key = f'count:{url}'
     redis_store.incr(count_key)
-    return requests.get(url).text
+    req = requests.get(url)
+    return req.text
